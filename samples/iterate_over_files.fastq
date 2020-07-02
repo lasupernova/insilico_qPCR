@@ -1,0 +1,13 @@
+import os
+
+#inititate varible for current working dcirectory
+cwd = os.getcwd()
+
+#inititate variable for sample folder
+sample_folder = '/samples'
+
+for filename in os.listdir(cwd):
+    if filename.endswith(".py"):
+        print(filename)
+    else:
+        continue

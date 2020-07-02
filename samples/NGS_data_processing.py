@@ -36,38 +36,25 @@ for i,rows in primer.iterrows():
     primer.loc[i,"reverse complementary & inverted"]=comp_rev[::-1] #insert for row i the created comp_rev string in new column
         
 #check number of lines for files
+    
+#samples=["CWW_38860_CGGAGCCTTATCCTCT_L001_","MBR_38856_GCGTAGTACTAAGCCT_L001_","HWW_2_38861_CGGAGCCTGTAAGGAG_L001_",
+ #        "Ozone_38857_GCGTAGTACGTCTAAT_L001_","Pharma_Inlet_38855_GCGTAGTAAAGGAGTA_L001_","UV_38859_CGGAGCCTCTCTCTAT_L001_",
+  #       "W1_In_38862_CGGAGCCTACTGCATA_L001_","W1_Out_38863_CGGAGCCTAAGGAGTA_L001_","W2_In_38864_CGGAGCCTCTAAGCCT_L001_",
+   #      "W2_Out_38865_CGGAGCCTCGTCTAAT_L001_"]
 
-#inititate varible for current working dcirectory
-cwd = os.getcwd()
-
-#inititate variable for sample folder
-sample_folder = '\samples'
-
-#create final path to samples folder by concatenating cwd and sample_folder strings
-path_samples = cwd+sample_folder
-
-#initiate list with sample names
-samples = []
-
-# iterate over samples in sample folder 
-for filename in os.listdir(path_samples):
-    # use only .fastq-files
-    if filename.endswith(".fastq"):
-        samples.append(filename)
-    else:
-        continue
+samples=["CWW_38860_CGGAGCCTTATCCTCT_L001_","MBR_38856_GCGTAGTACTAAGCCT_L001_"]
 
 
 for s in samples:
-    print("Currently processing sample: "+s)
-    num_lines_r1=sum(1 for line in open(s))
-    num_lines_r2=sum(1 for line in open(s))
+    print("Currently processed sample: "+s)
+    num_lines_r1=sum(1 for line in open(s+"R1_001_HTCKWBCX2.filt.fastq"))
+    num_lines_r2=sum(1 for line in open(s+"R2_001_HTCKWBCX2.filt.fastq"))
 
     if num_lines_r1==num_lines_r2: #check if length of both NGS files is equal
         #load first NGS file
-        r1=open(s)
+        r1=open(s+"R1_001_HTCKWBCX2.filt.fastq")
         #load second NGS file
-        r2=open(s)
+        r2=open(s+"R2_001_HTCKWBCX2.filt.fastq")
         #set name of experiment
         name=r1.name[:-28] #letters until LOO1
         #in the beginning second line of each file should be used, afterwards every 4th line until end of file
@@ -160,11 +147,11 @@ for s in samples:
             line_count+=x
         
         end_time=datetime.now()
-        print(f"Duration: {end_time - start_time}")
+        print("Duration: {}".format(end_time - start_time))
         text_file=open("Lines_newprimer_"+name+".txt", "w")
         text_file.write("total number of lines: "+str(num_lines_r1)+"\n")
         text_file.write("number of executed lines: "+str(line_count)+"\n")
-        text_file.write(f"duration: {end_time - start_time}")
+        text_file.write("duration: {}".format(end_time - start_time))
         text_file.close()
         pd.DataFrame(hits).to_excel("NGS_output_test_"+name+".xlsx", header=["concatenated sequence","primer that aligned","gene by primer file","aligned sequence","gene by subgene file"], index=False)
         
