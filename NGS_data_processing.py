@@ -2,7 +2,7 @@
 """
 Created on Fri Sep  6 16:15:07 2019
 
-@author: asenturk16
+@author: Aydanur Senturk
 
 Modified on Thu Jul 2 19:51:02 2020
 
@@ -19,9 +19,11 @@ from datetime import datetime
 start_time=datetime.now() #start recording time
 
 #read subgene sequence file
-df=pd.read_excel("amplicon_sequences.xlsx").set_index("name").replace('\n','', regex=True)
+amp_file=input("Please enter the full name of the excel file containig the amplicon sequences. Please indicate the column with the gene names as name: ")
+df=pd.read_excel(amp_file).set_index("name").replace('\n','', regex=True)
 #read file containing primer information
-primer=pd.read_excel("primer_sequences.xlsx").set_index("gene")
+primer_file=input("Please enter the full name of the excel file containig the primer sequences. Please indicate the column with the gene names as gene: ")
+primer=pd.read_excel(primer_file).set_index("gene")
 #create complementary and inverted sequence for primers and add to primer file
 bases=[("A","T"),("T","A"),("G","C"),("C","G")]
 for i,rows in primer.iterrows():
@@ -35,31 +37,30 @@ for i,rows in primer.iterrows():
                 comp_rev+=bases[t][1]
     primer.loc[i,"reverse complementary & inverted"]=comp_rev[::-1] #insert for row i the created comp_rev string in new column
         
-#check number of lines for files
-
-#inititate varible for current working dcirectory
-cwd = os.getcwd()
-
-#inititate variable for sample folder
-sample_folder = '\samples'
 
 #create final path to samples folder by concatenating cwd and sample_folder strings
-path_samples = cwd+sample_folder
+path_samples = input("Please enter the path of the sample folder: ")
+
+#the path of the file is checked
+while not os.path.isdir(path):
+    path=input("Please enter a valid directory: ")
+os.chdir(path)
 
 #initiate list with sample names
 samples = []
 
-# iterate over samples in sample folder 
+#iterate over samples in sample folder 
 for filename in os.listdir(path_samples):
-    # use only .fastq-files
+    #use only .fastq-files
     if filename.endswith(".fastq"):
         samples.append(filename)
     else:
         continue
 
-
+#iterate over lines in current sample
 for s in samples:
     print("Currently processing sample: "+s)
+    #check number of lines for files
     num_lines_r1=sum(1 for line in open(s))
     num_lines_r2=sum(1 for line in open(s))
 
