@@ -2,7 +2,7 @@
 """
 Created on Fri Sep  6 16:15:07 2019
 
-@author: asenturk16
+@author: Aydanur Senturk
 
 Modified on Thu Jul 2 19:51:02 2020
 
